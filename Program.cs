@@ -1,26 +1,18 @@
+using Microsoft.AspNetCore.Mvc;
+
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
-app.MapGet("/", () => "Hello World! 2");
-
-app.MapGet("/user", () => new {name = "Ansu", Age=26});
-app.MapGet("/AddHeader", (HttpResponse response) => {
-    response.Headers.Add("Teste", "Ansu");
-    return new {Name= "Ansu", Age = 26};
+//https://localhost:1996/getproduct?datestart=x5&dateend=y9
+app.MapGet("/getproduct", ([FromQuery] string dateStart, [FromQuery] string dateEnd) => {
+    return dateStart + " - " + dateEnd;
 });
 
-//PARAMETRO PELO BODY - INICIO
-app.MapPost("/saveproduct", (Product product) => {
-    return product.Code + " - " + product.Name;
+//https://localhost:1996/getproduct/17
+app.MapGet("/getproduct/{code}", ([FromRoute]string code) => {
+    return code;
 });
 
 app.Run();
 
-public class Product
-{
-    public string Code {get; set;}
 
-    public string Name {get; set;}
-}
-
-//PARAMETRO PELO BODY - FIM
