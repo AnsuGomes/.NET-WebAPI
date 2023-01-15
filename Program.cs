@@ -3,13 +3,21 @@ using Microsoft.AspNetCore.Mvc;
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
+//Insert the product.
 app.MapPost("/saveproduct", (Product produtc) => {
     ProductReposiory.Add(produtc);
 });
 
+//check the product.
 app.MapGet("/getproduct/{code}", ([FromRoute] string code) =>{
     var product = ProductReposiory.GetBy(code);
     return product;
+});
+
+//Edit the product.
+app.MapPut("/editproduct", (Product product) => {
+    var productSaved = ProductReposiory.GetBy(product.Code);
+    productSaved.Name = product.Name;
 });
 
 app.Run();
