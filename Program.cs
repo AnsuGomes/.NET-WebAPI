@@ -20,6 +20,12 @@ app.MapPut("/editproduct", (Product product) => {
     productSaved.Name = product.Name;
 });
 
+//Delete the product.
+app.MapDelete("/deleteproduct/{code}", ([FromRoute] string code)=> {
+    var productSaved = ProductReposiory.GetBy(code);
+    ProductReposiory.Remove(productSaved);
+});
+
 app.Run();
 
 public static class ProductReposiory{
@@ -33,6 +39,10 @@ public static class ProductReposiory{
 
     public static Product GetBy(string code){
         return Products.FirstOrDefault(p =>p.Code == code); //If not found, show default response.
+    }
+
+    public static void Remove(Product product){
+        Products.Remove(product);
     }
 }
 
