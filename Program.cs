@@ -4,26 +4,31 @@ var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
 //Insert the product.
-app.MapPost("/saveproduct", (Product produtc) => {
+app.MapPost("/products", (Product produtc) => {
     ProductReposiory.Add(produtc);
+    return Results.Created("/products/" + produtc.Code, produtc.Code);
 });
 
 //check the product.
-app.MapGet("/getproduct/{code}", ([FromRoute] string code) =>{
+app.MapGet("/products/{code}", ([FromRoute] string code) =>{
     var product = ProductReposiory.GetBy(code);
-    return product;
+    if(product != null)
+        return Results.Ok(product);
+    return Results.NotFound();
 });
 
 //Edit the product.
-app.MapPut("/editproduct", (Product product) => {
+app.MapPut("/products", (Product product) => {
     var productSaved = ProductReposiory.GetBy(product.Code);
     productSaved.Name = product.Name;
+    return Results.Ok();
 });
 
 //Delete the product.
-app.MapDelete("/deleteproduct/{code}", ([FromRoute] string code)=> {
+app.MapDelete("/products/{code}", ([FromRoute] string code)=> {
     var productSaved = ProductReposiory.GetBy(code);
     ProductReposiory.Remove(productSaved);
+    return Results.Ok();
 });
 
 app.Run();
